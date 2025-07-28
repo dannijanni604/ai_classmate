@@ -106,13 +106,17 @@ class TeacherChatView extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(40),
                   onTap: () async {
-                    await ctrl.fireStore.collection("chat").doc().set({
-                      'uid': ctrl.currentUserID,
-                      'message': ctrl.messageController.text,
-                      'type': "text",
-                      'sendAt': FieldValue.serverTimestamp(),
-                    });
-                    ctrl.messageController.clear();
+                    if (ctrl.messageController.text.isNotEmpty) {
+                      final name = await ctrl.getUserName();
+                      await ctrl.fireStore.collection("chat").doc().set({
+                        'name': name,
+                        'uid': ctrl.currentUserID,
+                        'message': ctrl.messageController.text,
+                        'type': "text",
+                        'sendAt': FieldValue.serverTimestamp(),
+                      });
+                      ctrl.messageController.clear();
+                    }
                   },
                   child: const Icon(Icons.send, color: Colors.black, size: 28),
                 ),
@@ -128,39 +132,48 @@ class TeacherChatView extends StatelessWidget {
 }
 
 class ChatChip extends StatelessWidget {
-  Map<String, dynamic> chat;
-  ChatController ctrl;
+  final Map<String, dynamic> chat;
+  final ChatController ctrl;
+
   ChatChip({required this.chat, required this.ctrl, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: ctrl.isauth
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+    final bool isSender = ctrl.isauth;
+    final bool isText = chat['type'] == 'text';
+    final bool isDoc = chat['type'] == 'doc';
+    final bool showLeftAvatar = !isSender && ctrl.pickedDocuments.isNotEmpty;
+    final bool showRightAvatar = isSender && !isDoc;
+
+    return Column(
+      crossAxisAlignment: isSender
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
-        if (ctrl.pickedDocuments.isNotEmpty)
-          ctrl.isauth
-              ? SizedBox()
-              : Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-        chat['type'] == 'text'
-            ? BubbleSpecialOne(
+        if (!isSender)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+            child: Text(
+              chat['name'] ?? 'Unknown',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: isSender
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
+          children: [
+            if (showLeftAvatar) _buildAvatar(),
+            if (isText)
+              BubbleSpecialOne(
                 delivered: true,
                 text: chat['message'] ?? "",
-                isSender: ctrl.isauth ? true : false,
+                isSender: isSender,
                 color: Colors.purple.shade100,
                 textStyle: const TextStyle(
                   fontSize: 18,
@@ -168,41 +181,42 @@ class ChatChip extends StatelessWidget {
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.bold,
                 ),
-                // seen: true,
               )
-            : Container(
-                child: Column(
-                  children: [
-                    ...chat['message']
-                        .map(
-                          (e) => Container(
-                            height: 200,
-                            width: 150,
-                            child: Image.network(e, fit: BoxFit.fill),
-                          ),
-                        )
-                        .toList(),
-                  ],
-                ),
-              ),
-        ctrl.isauth
-            ? chat['type'] == 'doc'
-                  ? SizedBox()
-                  : Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    )
-            : SizedBox(),
+            else
+              _buildImageBubble(chat['message']),
+            if (showRightAvatar) _buildAvatar(),
+          ],
+        ),
+        const SizedBox(height: 6),
       ],
+    );
+  }
+
+  Widget _buildAvatar() {
+    return Container(
+      height: 30,
+      width: 30,
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: const Icon(Icons.person, color: Colors.white, size: 20),
+    );
+  }
+
+  Widget _buildImageBubble(List<dynamic> images) {
+    return Column(
+      children: images
+          .map<Widget>(
+            (e) => Container(
+              height: 200,
+              width: 150,
+              margin: const EdgeInsets.all(4),
+              child: Image.network(e.toString(), fit: BoxFit.cover),
+            ),
+          )
+          .toList(),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:ai_classmate/views/splash_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_file_view/flutter_file_view.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 

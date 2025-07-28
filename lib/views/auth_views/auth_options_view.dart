@@ -6,6 +6,8 @@ import 'package:ai_classmate/views/auth_views/teacher_login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../ai_module/routes/app_routes.dart';
+
 class AuthOptionsView extends StatelessWidget {
   const AuthOptionsView({super.key});
 
@@ -23,14 +25,40 @@ class AuthOptionsView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset("assets/images/class_guide.png"),
-              Text(
-                "AI CLASSMATE",
-                style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w100,
+
+              SizedBox(
+                width: Get.size.width / 1.05,
+                child: kAppButton(
+                  onPressed: () {
+                    Get.offAndToNamed(Routes.home);
+                  },
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "AI HELPER",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: Get.size.height * 0.07),
+              SizedBox(height: Get.size.height * 0.05),
+
+              Center(
+                child: Text(
+                  "Use class LMS System below",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              SizedBox(height: Get.size.height * 0.05),
               SizedBox(
                 width: Get.size.width / 1.05,
                 child: kAppButton(
@@ -69,9 +97,9 @@ class AuthOptionsView extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: Get.size.height / 20),
+              SizedBox(height: Get.size.height / 30),
               const Text("- - - - - Or - - - - -"),
-              SizedBox(height: Get.size.height / 20),
+              SizedBox(height: Get.size.height / 30),
               SizedBox(
                 width: Get.size.width / 1.05,
                 child: kAppButton(

@@ -31,6 +31,13 @@ class ChatController extends GetxController {
     super.onReady();
   }
 
+  Future<String> getUserName() async {
+    final uid = auth.currentUser?.uid;
+    if (uid == null) return 'Anonymous';
+    final userDoc = await fireStore.collection('users').doc(uid).get();
+    return userDoc.data()?['name'] ?? 'Anonymous';
+  }
+
   String currentUserId() {
     final studentID = GetStorage().read("id");
     if (studentID != null) {
@@ -75,6 +82,7 @@ class ChatController extends GetxController {
         pickedFileUrls.add(await onComplete.ref.getDownloadURL());
 
         await fireStore.collection("chat").doc().set({
+          'name': _auth.currentUser!.displayName ?? 'Anonymous',
           'uid': currentUserID,
           'message': FieldValue.arrayUnion(pickedFileUrls),
           'type': 'doc',
