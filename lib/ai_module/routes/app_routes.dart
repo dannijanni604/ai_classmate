@@ -12,6 +12,8 @@ import '../views/text_generator_view.dart';
 class AppPages {
   AppPages._();
 
+  static const initial = Routes.splash;
+
   static final routes = [
     GetPage(
       name: _Paths.home,
@@ -35,6 +37,7 @@ class AppPages {
 
 abstract class Routes {
   Routes._();
+  static const splash = _Paths.splash;
   static const home = _Paths.home;
   static const imageGenerator = _Paths.imageGenerator;
   static const textGenerator = _Paths.textGenerator;
@@ -44,6 +47,7 @@ abstract class Routes {
 
 abstract class _Paths {
   _Paths._();
+  static const splash = '/splash';
   static const home = '/home';
   static const imageGenerator = '/image-generator';
   static const textGenerator = '/text-generator';
