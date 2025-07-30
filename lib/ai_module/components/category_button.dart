@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoryButton extends StatelessWidget {
-  const CategoryButton(
-      {super.key,
-      required this.label,
-      required this.colors,
-      required this.imageUrl,
-      required this.onTap});
+  const CategoryButton({
+    super.key,
+    required this.label,
+    required this.colors,
+    required this.imageUrl,
+    required this.onTap,
+  });
 
   final String label;
   final List<Color> colors;
@@ -30,13 +31,7 @@ class CategoryButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(imageUrl),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Colors.white,
-                ),
-              ),
+              Text(label, style: TextStyle(fontSize: 12, color: Colors.white)),
             ],
           ),
         ),

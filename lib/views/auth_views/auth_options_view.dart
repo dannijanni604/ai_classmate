@@ -1,3 +1,5 @@
+import 'package:ai_classmate/ai_module/controllers/home/home_bindings.dart';
+import 'package:ai_classmate/ai_module/views/home_view.dart';
 import 'package:ai_classmate/core/app_navigator.dart';
 import 'package:ai_classmate/core/components/app_button.dart';
 import 'package:ai_classmate/core/theme.dart';
@@ -5,8 +7,6 @@ import 'package:ai_classmate/views/auth_views/student_login_view.dart';
 import 'package:ai_classmate/views/auth_views/teacher_login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../ai_module/routes/app_routes.dart';
 
 class AuthOptionsView extends StatelessWidget {
   const AuthOptionsView({super.key});
@@ -30,7 +30,9 @@ class AuthOptionsView extends StatelessWidget {
                 width: Get.size.width / 1.05,
                 child: kAppButton(
                   onPressed: () {
-                    Get.offAndToNamed(Routes.home);
+                    Get.to(const AIHomeView(), binding: HomeBinding());
+
+                    // appNavPush(context, const AIHomeView());
                   },
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Row(

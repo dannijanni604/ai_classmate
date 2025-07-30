@@ -3,12 +3,15 @@ import 'package:ai_classmate/views/splash_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 void main() async {
   await GetStorage.init();
   // FlutterFileView.init();
+  await dotenv.load(fileName: '.env');
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb) {
     await Firebase.initializeApp();
@@ -32,26 +35,33 @@ class ClassGuideApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: AppTheme.primaryColor,
-        fontFamily: "montserrat",
-        iconTheme: const IconThemeData(size: 30),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppTheme.kprimaryColor,
-          elevation: 0,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(50),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: AppTheme.primaryColor,
+            fontFamily: "montserrat",
+            iconTheme: const IconThemeData(size: 30),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: AppTheme.kprimaryColor,
+              elevation: 0,
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              fillColor: Colors.white,
+              filled: true,
+            ),
           ),
-          fillColor: Colors.white,
-          filled: true,
-        ),
-      ),
-      home: const SplashView(),
+          home: const SplashView(),
+        );
+      },
     );
   }
 }
